@@ -5,7 +5,7 @@
  * including basic operations, constraint validation, and error handling.
  */
 
-import { ReferralNetwork, ReferralErrorType, topKByReach } from './index.js';
+import { ReferralNetwork, ReferralErrorType, topKByReach, topKByFlowCentrality } from './index.js';
 
 async function runDemo() {
   console.log('🚀 Referral Network Demo\n');
@@ -101,20 +101,39 @@ async function runDemo() {
     console.log('\n🎯 Influence Analysis:');
     console.log('─'.repeat(50));
     
-    // Test top k by reach
+    // Test top k by reach (using default k=5)
     try {
-      const top3ByReach = await topKByReach(network, 3);
-      console.log(`🏆 Top 3 users by reach: ${top3ByReach.join(', ')}`);
+      const topByReach = await topKByReach(network); // Uses default k=5
+      console.log(`🏆 Top users by reach (default k=5): ${topByReach.join(', ')}`);
       
       // Show reach for each user
-      for (const user of top3ByReach) {
+      for (const user of topByReach) {
         const userReferrals = await network.allReferrals(user);
         if (userReferrals.success) {
           console.log(`   • ${user}: ${userReferrals.data.length} descendants`);
         }
       }
     } catch (error) {
-      console.log(`❌ Error in influence analysis: ${error}`);
+      console.log(`❌ Error in reach analysis: ${error}`);
+    }
+    
+    // Test top k by flow centrality (using default k=5)
+    try {
+      const topByFlowCentrality = await topKByFlowCentrality(network); // Uses default k=5
+      console.log(`\n🌊 Top users by flow centrality (default k=5): ${topByFlowCentrality.join(', ')}`);
+      
+      // Show flow centrality for each user (this is expensive, so we'll just show the ranking)
+      console.log('   (Flow centrality measures how often a user lies on shortest paths between other users)');
+    } catch (error) {
+      console.log(`❌ Error in flow centrality analysis: ${error}`);
+    }
+    
+    // Test with custom k value
+    try {
+      const top2ByReach = await topKByReach(network, 2);
+      console.log(`\n🎯 Top 2 users by reach: ${top2ByReach.join(', ')}`);
+    } catch (error) {
+      console.log(`❌ Error in custom k reach analysis: ${error}`);
     }
     
     // === USER MANAGEMENT ===

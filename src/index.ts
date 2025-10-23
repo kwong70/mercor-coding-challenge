@@ -14,7 +14,7 @@ export { InMemoryStorage } from './storage/InMemoryStorage.js';
 export { StorageFactory } from './storage/StorageFactory.js';
 
 // Influence analysis functions
-export { topKByReach } from './influence.js';
+export { topKByReach, topKByFlowCentrality } from './influence.js';
 
 // Re-export commonly used types for convenience
 export type {
