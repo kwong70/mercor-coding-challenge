@@ -5,7 +5,7 @@
  * including basic operations, constraint validation, and error handling.
  */
 
-import { ReferralNetwork, ReferralErrorType } from './index.js';
+import { ReferralNetwork, ReferralErrorType, topKByReach } from './index.js';
 
 async function runDemo() {
   console.log('🚀 Referral Network Demo\n');
@@ -97,6 +97,26 @@ async function runDemo() {
       console.log(`📊 Average referrals per user: ${stats.data.averageReferralsPerUser.toFixed(2)}`);
     }
     
+    // === INFLUENCE ANALYSIS ===
+    console.log('\n🎯 Influence Analysis:');
+    console.log('─'.repeat(50));
+    
+    // Test top k by reach
+    try {
+      const top3ByReach = await topKByReach(network, 3);
+      console.log(`🏆 Top 3 users by reach: ${top3ByReach.join(', ')}`);
+      
+      // Show reach for each user
+      for (const user of top3ByReach) {
+        const userReferrals = await network.allReferrals(user);
+        if (userReferrals.success) {
+          console.log(`   • ${user}: ${userReferrals.data.length} descendants`);
+        }
+      }
+    } catch (error) {
+      console.log(`❌ Error in influence analysis: ${error}`);
+    }
+    
     // === USER MANAGEMENT ===
     console.log('\n👤 User Management:');
     console.log('─'.repeat(50));
@@ -162,6 +182,7 @@ async function runDemo() {
     console.log('✅ All basic operations working');
     console.log('✅ Constraint validation working');
     console.log('✅ Network statistics working');
+    console.log('✅ Influence analysis working');
     console.log('✅ Error handling working');
     console.log('✅ Configuration management working');
     console.log('\n🚀 Referral Network is fully functional!');

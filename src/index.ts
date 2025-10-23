@@ -13,6 +13,9 @@ export * from './storage/interfaces.js';
 export { InMemoryStorage } from './storage/InMemoryStorage.js';
 export { StorageFactory } from './storage/StorageFactory.js';
 
+// Influence analysis functions
+export { topKByReach } from './influence.js';
+
 // Re-export commonly used types for convenience
 export type {
   UserId,
